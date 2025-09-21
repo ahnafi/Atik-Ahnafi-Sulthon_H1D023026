@@ -5,6 +5,47 @@ namespace App\Services;
 class FuzzyTsukamotoService
 {
 
+    private array $rules = [];
+
+    public function __construct()
+    {
+        // Define IF-THEN rules
+        $this->rules = [
+            // Very Thin
+            ['weight' => 'very_thin', 'height' => 'very_short', 'output' => 'poor'],
+            ['weight' => 'very_thin', 'height' => 'short', 'output' => 'lack'],
+            ['weight' => 'very_thin', 'height' => 'normal', 'output' => 'lack'],
+            ['weight' => 'very_thin', 'height' => 'tall', 'output' => 'normal'],
+
+            // Thin
+            ['weight' => 'thin', 'height' => 'very_short', 'output' => 'lack'],
+            ['weight' => 'thin', 'height' => 'short', 'output' => 'normal'],
+            ['weight' => 'thin', 'height' => 'normal', 'output' => 'lack'],
+            ['weight' => 'thin', 'height' => 'tall', 'output' => 'lack'],
+
+            // Normal
+            ['weight' => 'normal', 'height' => 'very_short', 'output' => 'lack'],
+            ['weight' => 'normal', 'height' => 'short', 'output' => 'lack'],
+            ['weight' => 'normal', 'height' => 'normal', 'output' => 'normal'],
+            ['weight' => 'normal', 'height' => 'tall', 'output' => 'normal'],
+
+            // Fat
+            ['weight' => 'fat', 'height' => 'very_short', 'output' => 'normal'],
+            ['weight' => 'fat', 'height' => 'short', 'output' => 'normal'],
+            ['weight' => 'fat', 'height' => 'normal', 'output' => 'normal'],
+            ['weight' => 'fat', 'height' => 'tall', 'output' => 'normal'],
+        ];
+
+    }
+
+    private function triangle($x, $a, $b, $c): float|int
+    {
+        if ($x <= $a || $x >= $c) return 0;
+        elseif ($x == $b) return 1;
+        elseif ($x > $a && $x < $b) return ($x - $a) / ($b - $a);
+        else return ($c - $x) / ($c - $b);
+    }
+
     /*
      * KURVA BAHU SEGITIGA
      *
@@ -36,196 +77,86 @@ class FuzzyTsukamotoService
      * menghitung derajat keanggotaan berat badan
      * dengan parameter berat badan int
      *
-     * return array "underweight" => int, "normal" => int, "heavy" => int,
+     * return array "underweight" => int, "normal" => int, "overweight" => int,
      */
-    private function getFuzzyBodyWeight(int $w): array
+    private function membershipWeight($x): array
     {
-
-        $underweight = [0, 6, 12];
-        $normal = [6, 12, 18];
-        $heavy = [12, 18, 24];
-
-        $result = [0, 0, 0];
-
-        // underweight
-        if ($w == $underweight[1]) {
-            $result[0] = 1;
-        } else if ($w > $underweight[0] && $w < $underweight[1]) {
-            $result[0] = ($w - $underweight[0]) / ($underweight[1] - $underweight[0]);
-        } else if ($underweight[1] < $w && $w < $underweight[2]) {
-            $result[0] = ($underweight[2] - $w) / ($underweight[2] - $underweight[1]);
-        } else {
-            $result[0] = 0;
-        }
-
-        // normal
-        if ($w == $normal[1]) {
-            $result[1] = 1;
-        } else if ($w > $normal[0] && $w < $normal[1]) {
-            $result[1] = ($w - $normal[0]) / ($normal[1] - $normal[0]);
-        } else if ($normal[1] < $w && $w < $normal[2]) {
-            $result[1] = ($normal[2] - $w) / ($normal[2] - $normal[1]);
-        } else {
-            $result[1] = 0;
-        }
-
-        // heavy
-        if ($w == $heavy[1]) {
-            $result[2] = 1;
-        } else if ($w > $heavy[0] && $w < $heavy[1]) {
-            $result[2] = ($w - $heavy[0]) / ($heavy[1] - $heavy[0]);
-        } else if ($heavy[1] < $w && $w < $heavy[2]) {
-            $result[2] = ($heavy[2] - $w) / ($heavy[2] - $heavy[1]);
-        } else {
-            $result[2] = 0;
-        }
-
+        // Triangular sets: underweight (0, 6, 12), normal (6, 12, 18), overweight (12, 18 24)
         return [
-            "underweight" => $result[0],
-            "normal" => $result[1],
-            "heavy" => $result[2],
+            'thin' => $this->triangle($x, 0, 6, 12),
+            'normal' => $this->triangle($x, 6, 12, 18),
+            'fat' => $this->triangle($x, 12, 18, 24),
         ];
-
     }
 
-    /*
-     *
-     *
-     *
-     */
-    private function getFuzzyBodyHeight(int $h): array
+    private function membershipHeight($x): array
     {
-
-        $short = [0, 45, 70];
-        $normal = [45, 70, 95];
-        $tall = [70, 95, 123];
-
-        $result = [0, 0, 0];
-
-        // short
-        if ($h == $short[1]) {
-            $result[0] = 1;
-        } else if ($h >= $short[0] && $h <= $short[1]) {
-            $result[0] = ($h - $short[0]) / ($short[1] - $short[0]);
-        } else if ($short[1] <= $h && $h <= $short[2]) {
-            $result[0] = ($short[2] - $h) / ($short[2] - $short[1]);
-        } else {
-            $result[0] = 0;
-        }
-
-        // normal
-        if ($h == $normal[1]) {
-            $result[1] = 1;
-        } else if ($h >= $normal[0] && $h <= $normal[1]) {
-            $result[1] = ($h - $normal[0]) / ($normal[1] - $normal[0]);
-        } else if ($normal[1] <= $h && $h <= $normal[2]) {
-            $result[1] = ($normal[2] - $h) / ($normal[2] - $normal[1]);
-        } else {
-            $result[1] = 0;
-        }
-
-        // tall
-        if ($h == $tall[1]) {
-            $result[2] = 1;
-        } else if ($h >= $tall[0] && $h <= $tall[1]) {
-            $result[2] = ($h - $tall[0]) / ($tall[1] - $tall[0]);
-        } else if ($tall[1] <= $h && $h <= $tall[2]) {
-            $result[2] = ($tall[2] - $h) / ($tall[2] - $tall[1]);
-        } else {
-            $result[2] = 0;
-        }
-
         return [
-            "short" => $result[0],
-            "normal" => $result[1],
-            "tall" => $result[2],
+            'short' => $this->triangle($x, 0, 45, 70),   // segitiga kiri
+            'normal' => $this->triangle($x, 45, 70, 95), // segitiga penuh
+            'tall' => $this->triangle($x, 70, 95, 123), // segitiga kanan
         ];
-
     }
 
-    /*
-     *
-     *
-     */
-
-    public function calculateNutritionalStatus(int $w, int $h): array
+    // Inference process
+    public function inference($weight, $height): array
     {
+        $uWeight = $this->membershipWeight($weight);
+        $uHeight = $this->membershipHeight($height);
 
-        $bodyWeight = $this->getFuzzyBodyWeight($w);
-        $bodyHeight = $this->getFuzzyBodyHeight($h);
-        //
-        $severelyStunting = 20;
-        $stunting = 40;
-        $normal = 60;
-        $overweight = 80;
-        $obesitas = 100;
+        $results = [];
+        foreach ($this->rules as $rule) {
+            $alpha = min($uWeight[$rule['weight']], $uHeight[$rule['height']]);
+            $results[] = [
+                'alpha' => $alpha,
+                'z' => $this->consequent($rule['output'], $alpha)
+            ];
+        }
 
-        /*
-         *  Inference fuzzy
-         *
-         * status z
-         * "severely_stunting" ,"stunting", "normal", "overweight", "obesitas"
-         * 20, 40, 60, 80 ,100
-         *
-         * rules
-         *
-        */
-        $rules = [
-            ["weight" => "underweight", "height" => "short", "result" => $severelyStunting],
-            ["weight" => "underweight", "height" => "normal", "result" => $stunting],
-            ["weight" => "underweight", "height" => "tall", "result" => $normal],
-            ["weight" => "normal", "height" => "short", "result" => $stunting],
-            ["weight" => "normal", "height" => "normal", "result" => $normal],
-            ["weight" => "normal", "height" => "tall", "result" => $normal],
-            ["weight" => "heavy", "height" => "short", "result" => $overweight],
-            ["weight" => "heavy", "height" => "normal", "result" => $overweight],
-            ["weight" => "heavy", "height" => "tall", "result" => $obesitas],
+        $crisp = $this->defuzzification($results);
+        $label = $this->translateResult($crisp);
+
+        return ['value' => $crisp, 'label' => $label];
+    }
+
+    // Consequent values (output mapping)
+    private function consequent($output, $alpha): float|int
+    {
+        $zValues = [
+            'poor' => 20,
+            'lack' => 40,
+            'normal' => 60,
+            'over' => 80,
+            'obese' => 100,
         ];
+        return $zValues[$output] * $alpha;
+    }
 
-        $resultRule = [];
-
-        foreach ($rules as $rule) {
-            $weightValue = $bodyWeight[$rule["weight"]];
-            $heightValue = $bodyHeight[$rule["height"]];
-
-            // Cari nilai alpha-predikat menggunakan MIN
-            $alpha = min($weightValue, $heightValue);
-            if ($alpha > 0) {
-                $resultRule[] = [
-                    "alpha" => $alpha,
-                    "z" => $rule["result"], // hasil nilai z
-                ];
-            }
+    // Defuzzification (weighted average)
+    private function defuzzification($results): float|int
+    {
+        $num = 0; // pembilang
+        $den = 0; // penyebut
+        foreach ($results as $res) {
+            $num += $res['alpha'] * $res['z'];
+            $den += $res['alpha'];
         }
+        return $den == 0 ? 0 : $num / $den;
+    }
 
-        $numerator = 0;
-        $denominator = 0;
-
-        foreach ($resultRule as $rule) {
-            $numerator += $rule["z"] * $rule["alpha"];
-            $denominator += $rule["alpha"];
-        }
-
-        // Hindari pembagian dengan nol
-        if ($denominator == 0) return ['score' => 0, 'status' => 'Tidak Terdefinisi'];
-
-        $result = $numerator / $denominator;
-
-        // Tentukan status berdasarkan score
-        if ($result <= 20) {
-            $status = "severely_stunting";
-        } elseif ($result <= 40) {
-            $status = "stunting";
-        } elseif ($result <= 60) {
-            $status = "normal";
-        } elseif ($result <= 80) {
-            $status = "overweight";
+    private function translateResult($value): string
+    {
+        if ($value < 30) {
+            return 'poor';
+        } elseif ($value > 30 && $value <= 45) {
+            return 'lack';
+        } elseif ($value > 45 && $value <= 65) {
+            return 'normal';
+        } elseif ($value > 65 && $value <= 85) {
+            return 'over';
         } else {
-            $status = "obesitas";
+            return 'obese';
         }
-
-        return ["score" => $result, "status" => $status];
-
     }
 
 }
