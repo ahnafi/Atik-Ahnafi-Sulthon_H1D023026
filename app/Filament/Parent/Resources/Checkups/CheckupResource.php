@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Checkups;
+namespace App\Filament\Parent\Resources\Checkups;
 
-use App\Filament\Resources\Checkups\Pages\CreateCheckup;
-use App\Filament\Resources\Checkups\Pages\EditCheckup;
-use App\Filament\Resources\Checkups\Pages\ListCheckups;
-use App\Filament\Resources\Checkups\Schemas\CheckupForm;
-use App\Filament\Resources\Checkups\Tables\CheckupsTable;
+use App\Filament\Parent\Resources\Checkups\Pages\CreateCheckup;
+use App\Filament\Parent\Resources\Checkups\Pages\EditCheckup;
+use App\Filament\Parent\Resources\Checkups\Pages\ListCheckups;
+use App\Filament\Parent\Resources\Checkups\Schemas\CheckupForm;
+use App\Filament\Parent\Resources\Checkups\Tables\CheckupsTable;
 use App\Models\Checkup;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -20,7 +20,8 @@ class CheckupResource extends Resource
 {
     protected static ?string $model = Checkup::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHeart;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShieldCheck;
+    protected static ?string $label = "Pengecekan Stunting";
 
     public static function form(Schema $schema): Schema
     {

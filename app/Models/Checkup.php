@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Checkup extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         "children_id",
         "checkup_date",

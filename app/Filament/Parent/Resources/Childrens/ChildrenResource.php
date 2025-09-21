@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Childrens;
+namespace App\Filament\Parent\Resources\Childrens;
 
-use App\Filament\Resources\Childrens\Pages\CreateChildren;
-use App\Filament\Resources\Childrens\Pages\EditChildren;
-use App\Filament\Resources\Childrens\Pages\ListChildrens;
-use App\Filament\Resources\Childrens\Schemas\ChildrenForm;
-use App\Filament\Resources\Childrens\Tables\ChildrensTable;
+use App\Filament\Parent\Resources\Childrens\Pages\CreateChildren;
+use App\Filament\Parent\Resources\Childrens\Pages\EditChildren;
+use App\Filament\Parent\Resources\Childrens\Pages\ListChildrens;
+use App\Filament\Parent\Resources\Childrens\Schemas\ChildrenForm;
+use App\Filament\Parent\Resources\Childrens\Tables\ChildrensTable;
 use App\Models\Children;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -21,6 +21,8 @@ class ChildrenResource extends Resource
     protected static ?string $model = Children::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
+    protected static ?string $label = 'Data Anak';
+
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -57,4 +59,5 @@ class ChildrenResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
+
 }
