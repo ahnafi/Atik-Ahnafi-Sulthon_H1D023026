@@ -23,8 +23,8 @@ class CheckupService
         $row = $data[$ageInMonths];
 
         // Cutoffs standar WHO
-        $cutoffs = ['SD3neg', 'SD2neg', 'SD1neg', 'median', 'SD1', 'SD2', 'SD3'];
-        $zs = [-3, -2, -1, 0, 1, 2, 3];
+        $cutoffs = ['SD3neg', 'SD2neg', 'SD1neg', 'SD0', 'SD1', 'SD2', 'SD3'];
+        $zs      = [-3, -2, -1, 0, 1, 2, 3];
 
         for ($i = 0; $i < count($cutoffs) - 1; $i++) {
             $low = $row[$cutoffs[$i]];
@@ -66,11 +66,9 @@ class CheckupService
         $service = App(FuzzyTsukamotoService::class);
         $result = $service->inference($waz, $haz);
 
+        //  $table->enum("nutrition", ["normal", "stunting", "severely_stunting", "overweight", "obesitas"])->nullable();
         $data["fuzzy_score"] = $result['value'];
-        $data["nutritional_status"] = $result['label'];
-
-        Log::info("value = " . $result["value"]);
-        Log::info("label = " . $result["label"]);
+        $data["nutrition"] = $result['label'];
 
         return $data;
     }

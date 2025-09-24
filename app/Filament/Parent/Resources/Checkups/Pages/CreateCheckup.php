@@ -23,6 +23,8 @@ class CreateCheckup extends CreateRecord
         $service = App(CheckupService::class);
         $data = $service->checkup($data);
 
+        Log::info("checkup = " . json_encode($data));
+
         return parent::mutateFormDataBeforeCreate($data);
     }
 
