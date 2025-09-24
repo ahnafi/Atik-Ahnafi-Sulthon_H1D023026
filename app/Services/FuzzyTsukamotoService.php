@@ -10,28 +10,28 @@ class FuzzyTsukamotoService
     {
         $this->rules = [
             // 🔴 Severe Malnutrition
-            ['waz'=>'severely_underweight', 'haz'=>'severely_stunted', 'output'=>'severely_stunting'],
-            ['waz'=>'severely_underweight', 'haz'=>'stunted', 'output'=>'severely_stunting'],
-            ['waz'=>'severely_underweight', 'haz'=>'normal', 'output'=>'stunting'],
-            ['waz'=>'severely_underweight', 'haz'=>'tall', 'output'=>'stunting'],
+            ['waz' => 'severely_underweight', 'haz' => 'severely_stunted', 'output' => 'severely_stunting'],
+            ['waz' => 'severely_underweight', 'haz' => 'stunted', 'output' => 'severely_stunting'],
+            ['waz' => 'severely_underweight', 'haz' => 'normal', 'output' => 'stunting'],
+            ['waz' => 'severely_underweight', 'haz' => 'tall', 'output' => 'stunting'],
 
             // 🟠 Underweight
-            ['waz'=>'underweight', 'haz'=>'severely_stunted', 'output'=>'severely_stunting'],
-            ['waz'=>'underweight', 'haz'=>'stunted', 'output'=>'stunting'],
-            ['waz'=>'underweight', 'haz'=>'normal', 'output'=>'stunting'],
-            ['waz'=>'underweight', 'haz'=>'tall', 'output'=>'normal'],
+            ['waz' => 'underweight', 'haz' => 'severely_stunted', 'output' => 'severely_stunting'],
+            ['waz' => 'underweight', 'haz' => 'stunted', 'output' => 'stunting'],
+            ['waz' => 'underweight', 'haz' => 'normal', 'output' => 'stunting'],
+            ['waz' => 'underweight', 'haz' => 'tall', 'output' => 'normal'],
 
             // 🟢 Normal weight
-            ['waz'=>'normal', 'haz'=>'severely_stunted', 'output'=>'stunting'],
-            ['waz'=>'normal', 'haz'=>'stunted', 'output'=>'stunting'],
-            ['waz'=>'normal', 'haz'=>'normal', 'output'=>'normal'],
-            ['waz'=>'normal', 'haz'=>'tall', 'output'=>'normal'],
+            ['waz' => 'normal', 'haz' => 'severely_stunted', 'output' => 'stunting'],
+            ['waz' => 'normal', 'haz' => 'stunted', 'output' => 'stunting'],
+            ['waz' => 'normal', 'haz' => 'normal', 'output' => 'normal'],
+            ['waz' => 'normal', 'haz' => 'tall', 'output' => 'normal'],
 
             // 🔵 Overweight
-            ['waz'=>'overweight', 'haz'=>'severely_stunted', 'output'=>'overweight'], // short obese risk
-            ['waz'=>'overweight', 'haz'=>'stunted', 'output'=>'overweight'],
-            ['waz'=>'overweight', 'haz'=>'normal', 'output'=>'overweight'],
-            ['waz'=>'overweight', 'haz'=>'tall', 'output'=>'obesitas'],
+            ['waz' => 'overweight', 'haz' => 'severely_stunted', 'output' => 'overweight'], // short obese risk
+            ['waz' => 'overweight', 'haz' => 'stunted', 'output' => 'overweight'],
+            ['waz' => 'overweight', 'haz' => 'normal', 'output' => 'overweight'],
+            ['waz' => 'overweight', 'haz' => 'tall', 'output' => 'obesitas'],
         ];
     }
 
@@ -44,31 +44,39 @@ class FuzzyTsukamotoService
         else return ($c - $x) / ($c - $b);
     }
 
+    // Trapezoidal fuzzy membership
+    private function trapezoid($x, $a, $b, $c, $d): float|int
+    {
+        if ($x <= $a || $x >= $d) return 0;
+        elseif ($x >= $b && $x <= $c) return 1;
+        elseif ($x > $a && $x < $b) return ($x - $a) / ($b - $a);
+        else return ($d - $x) / ($d - $c);
+    }
+
+
     /*
      * Membership function WAZ (Weight-for-Age Z-score)
-     * Categories: severely_underweight, underweight, normal, overweight
      */
     private function membershipWAZ($z): array
     {
         return [
             'severely_underweight' => $this->triangle($z, -5, -3, -2),
-            'underweight' => $this->triangle($z, -3, -2, 0),
-            'normal' => $this->triangle($z, -2, 0, +2),
-            'overweight' => $this->triangle($z, 0, +2, +4),
+            'underweight' => $this->triangle($z, -3, -2, -0.5),
+            'normal' => $this->trapezoid($z, -1, -0.5, 0.5, 1),
+            'overweight' => $this->triangle($z, 0.5, 2, 4),
         ];
     }
 
     /*
      * Membership function HAZ (Height-for-Age Z-score)
-     * Categories: severely_stunted, stunted, normal, tall
      */
     private function membershipHAZ($z): array
     {
         return [
             'severely_stunted' => $this->triangle($z, -5, -3, -2),
-            'stunted' => $this->triangle($z, -3, -2, 0),
-            'normal' => $this->triangle($z, -2, 0, +2),
-            'tall' => $this->triangle($z, 0, +2, +4),
+            'stunted' => $this->triangle($z, -3, -2, -0.5),
+            'normal' => $this->trapezoid($z, -1, -0.5, 0.5, 1),
+            'tall' => $this->triangle($z, 0.5, 2, 4),
         ];
     }
 
