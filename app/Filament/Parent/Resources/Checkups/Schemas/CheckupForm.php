@@ -15,7 +15,7 @@ class CheckupForm
             ->components([
                 Select::make('children_id')
                     ->label('Nama Anak')
-                    ->relationship('children', 'name', fn($query) => $query->where('user_id', auth()->id()))
+                    ->relationship('children', 'name', fn ($query) => $query->where('user_id', auth()->id()))
                     ->required(),
                 DatePicker::make('checkup_date')
                     ->label('Tanggal Pengecekan')
@@ -32,20 +32,23 @@ class CheckupForm
                     ->default(0.0),
                 TextInput::make('age_in_months')
                     ->label('Umur (Bulan)')
+                    ->live(onBlur: true)
                     ->disabled()
-                    ->hiddenOn("create")
+                    ->hiddenOn('create')
                     ->numeric()
                     ->default(null),
                 TextInput::make('fuzzy_score')
+                    ->live(onBlur: true)
                     ->label('Nilai Pengecekan')
                     ->numeric()
                     ->disabled()
-                    ->hiddenOn("create")
+                    ->hiddenOn('create')
                     ->default(0.0),
                 Select::make('nutrition')
+                    ->live(onBlur: true)
                     ->label('Status Anak')
                     ->disabled()
-                    ->hiddenOn("create")
+                    ->hiddenOn('create')
                     ->options([
                         'normal' => 'Normal',
                         'stunting' => 'Stunting',

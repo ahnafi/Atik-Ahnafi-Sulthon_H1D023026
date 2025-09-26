@@ -2,8 +2,8 @@
     <div class="container mx-auto px-4">
         <div class="flex h-16 items-center justify-between">
             <a href="{{ route('home') }}" class="flex items-center space-x-2">
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                    <i data-lucide="heart" class="h-5 w-5 text-white"></i>
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg">
+                    <img src="{{ asset('logo.png') }}" alt="Tele Stunting Logo">
                 </div>
                 <span class="text-xl font-semibold text-foreground">Tele Stunting</span>
             </a>

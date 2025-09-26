@@ -24,13 +24,13 @@ class ParentPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        return $panelg
             ->id('parent')
             ->path('u')
             ->colors([
                 'primary' => Color::Green,
             ])
-            ->favicon(null) // todo
+            ->favicon(asset('favicon.ico')) 
             ->login()
             ->registration(ParentRegisterService::class)
             ->passwordReset()

@@ -27,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->favicon(null) // todo
+            ->favicon(asset('favicon.ico'))
             ->login()
             ->profile(isSimple: false)
             ->colors([

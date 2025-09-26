@@ -7,6 +7,7 @@
           content="Membantu orang tua dalam memantau tumbuh kembang anak sejak dini dengan diagnosis berbasis Fuzzy Tsukamoto.">
     <meta name="generator" content="Tele Stunting">
     <title>@yield('title', 'Tele Stunting - Deteksi Dini Stunting pada Balita')</title>
+    <favicon rel="icon" type="image/png" href="{{ asset('favicon.ico') }}"/>
 
     {{--    Google Fonts--}}
     <link rel="preconnect" href="https://fonts.googleapis.com">

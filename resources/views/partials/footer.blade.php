@@ -4,8 +4,8 @@
 
             <div class="space-y-4">
                 <div class="flex items-center space-x-2">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                        <i data-lucide="heart" class="h-5 w-5 text-white"></i>
+                    <div class="flex h-12 w-12 items-center justify-center rounded-lg">
+                        <img src="{{ asset('logo.png') }}" alt="Tele Stunting Logo" class=" text-white">
                     </div>
                     <span class="text-xl font-semibold">Tele Stunting</span>
                 </div>
