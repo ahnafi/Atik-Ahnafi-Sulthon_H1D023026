@@ -24,7 +24,7 @@ class ParentPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panelg
+        return $panel
             ->id('parent')
             ->path('u')
             ->colors([
