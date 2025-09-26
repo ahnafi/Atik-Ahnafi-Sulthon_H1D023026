@@ -15,7 +15,7 @@ class CheckupForm
             ->components([
                 Select::make('children_id')
                     ->label('Nama Anak')
-                    ->relationship('children', 'name')
+                    ->relationship('children', 'name', fn($query) => $query->where('user_id', auth()->id()))
                     ->required(),
                 DatePicker::make('checkup_date')
                     ->label('Tanggal Pengecekan')

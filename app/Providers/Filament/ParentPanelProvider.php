@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Services\ParentRegisterService;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -27,11 +28,11 @@ class ParentPanelProvider extends PanelProvider
             ->id('parent')
             ->path('u')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Green,
             ])
             ->favicon(null) // todo
             ->login()
-            ->registration()
+            ->registration(ParentRegisterService::class)
             ->passwordReset()
             ->emailVerification()
             ->emailChangeVerification()

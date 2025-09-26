@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
+
 class FuzzyTsukamotoService
 {
     private array $rules = [];
@@ -99,6 +101,8 @@ class FuzzyTsukamotoService
 
         $crisp = $this->defuzzification($results);
         $label = $this->translateResult($crisp);
+
+        Log::info('fuzzy results = '.json_encode($results));
 
         return ['value' => $crisp, 'label' => $label];
     }

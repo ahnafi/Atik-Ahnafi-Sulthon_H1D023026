@@ -3,13 +3,12 @@
 namespace App\Filament\Parent\Resources\Checkups\Pages;
 
 use App\Filament\Parent\Resources\Checkups\CheckupResource;
-use App\Models\Children;
 use App\Services\CheckupService;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class EditCheckup extends EditRecord
 {
@@ -26,10 +25,10 @@ class EditCheckup extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        $data = App(CheckupService::class)->checkup($data);
 
-        $service = App(CheckupService::class);
-        $data = $service->checkup($data);
+        Log::info('checkup = '.json_encode($data));
 
-        return parent::mutateFormDataBeforeCreate($data);
+        return $data;
     }
 }

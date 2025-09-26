@@ -54,6 +54,9 @@ class CheckupService
      */
     public function checkup(array $data): array
     {
+
+        Log::info('checkup service = '.json_encode($data));
+
         $children = Children::findOrFail($data['children_id']);
         // Hitung umur dalam bulan
         $data["age_in_months"] = Carbon::parse($children->date_of_birth)->diffInMonths(Carbon::parse($data["checkup_date"]));
@@ -61,6 +64,9 @@ class CheckupService
         // Hitung Z-score
         $waz = $this->calculateWHOZScore($data["weight"], $data["age_in_months"], $children->gender, 'wfa');
         $haz = $this->calculateWHOZScore($data["height"], $data["age_in_months"], $children->gender, 'lhfa');
+
+        Log::info('waz = '.$waz);
+        Log::info('haz = '.$haz);
 
         // Jalankan fuzzy
         $service = App(FuzzyTsukamotoService::class);

@@ -6,6 +6,78 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-primary: #4caf50; /* Soft green */
+    --color-secondary: #00b0ff; /* Light blue */
+    --color-accent: #e8f5e8; /* Very light green */
+    --color-background: #ffffff;
+    --color-foreground: #1a1a1a;
+    --color-muted: #f5f5f5;
+    --color-muted-foreground: #666666;
+    --color-border: #e5e5e5;
+    --color-card: #ffffff;
+    --color-card-foreground: #1a1a1a;
+    --color-input: #e5e5e5;
+    --color-ring: #4caf50;
+
+    --radius: 0.625rem;
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        font-family: "Poppins", sans-serif;
+    }
+
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .text-pretty {
+        text-wrap: pretty;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background;
+    }
+
+    .btn-primary {
+        @apply bg-primary text-white hover:bg-primary/90;
+    }
+
+    .btn-secondary {
+        @apply bg-secondary text-white hover:bg-secondary/90;
+    }
+
+    .btn-outline {
+        @apply border border-input bg-transparent hover:bg-accent hover:text-green-800;
+    }
+
+    .btn-sm {
+        @apply h-9 px-3 rounded-md;
+    }
+
+    .btn-lg {
+        @apply h-11 px-8 rounded-md;
+    }
+
+    .card {
+        @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+    }
+
+    .container {
+        @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+        max-width: 1200px;
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Parent\Resources\Checkups\Tables;
 
+use App\Filament\Parent\Resources\Checkups\Schemas\CheckupForm;
+use App\Models\Checkup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -12,12 +14,16 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class CheckupsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn(Builder $query) => $query->whereHas('children', function (Builder $query) {
+                $query->where('user_id', auth()->id());
+            }))
             ->columns([
                 TextColumn::make('children.name')
                     ->label("Nama Anak")
