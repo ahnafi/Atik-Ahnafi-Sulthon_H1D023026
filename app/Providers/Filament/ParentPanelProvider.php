@@ -45,6 +45,10 @@ class ParentPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Parent/Widgets'), for: 'App\Filament\Parent\Widgets')
             ->widgets([
                 AccountWidget::class,
+                \App\Filament\Parent\Widgets\CheckupStatsWidget::class,
+                \App\Filament\Parent\Widgets\CheckupTrendChart::class,
+                \App\Filament\Parent\Widgets\NutritionStatusChart::class,
+                \App\Filament\Parent\Widgets\ChildrenOverviewWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
