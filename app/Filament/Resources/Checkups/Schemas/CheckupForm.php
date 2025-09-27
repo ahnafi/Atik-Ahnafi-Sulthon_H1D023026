@@ -51,7 +51,7 @@ class CheckupForm
                     ->visibleOn(["edit", "view"])
                     ->disabled(),
 
-                Select::make("nutritional_status")
+                Select::make("nutrition")
                     ->label("Nilai Nutrisi Pada anak")
                     ->visibleOn(["view", "edit"])
                     ->disabled()

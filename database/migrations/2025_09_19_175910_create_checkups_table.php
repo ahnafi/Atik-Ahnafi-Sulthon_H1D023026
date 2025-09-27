@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->decimal("height", 5, 2)->default(0);
             $table->decimal("weight", 5, 2)->default(0);
             $table->decimal("fuzzy_score", 5, 2)->nullable()->default(0);
-            $table->enum("nutrition", ["normal", "stunting", "severely_stunting", "overweight", "obesitas"])->nullable();
+            $table->enum("nutrition", ["normal", "stunting", "severely_stunting", "overweight", "obesitas"]);
             $table->timestamps();
             $table->softDeletes();
         });

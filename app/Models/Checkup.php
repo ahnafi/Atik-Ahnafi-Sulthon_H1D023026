@@ -16,7 +16,7 @@ class Checkup extends Model
         "height",
         "weight",
         "fuzzy_score",
-        "nutritional_status"
+        "nutrition"
     ];
 
     public function children(): BelongsTo

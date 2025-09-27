@@ -18,6 +18,8 @@ class CheckupForm
                     ->relationship('children', 'name', fn ($query) => $query->where('user_id', auth()->id()))
                     ->required(),
                 DatePicker::make('checkup_date')
+                    ->timezone('Asia/Jakarta')
+                    ->displayFormat('d/m/Y')
                     ->label('Tanggal Pengecekan')
                     ->required(),
                 TextInput::make('height')
@@ -52,7 +54,7 @@ class CheckupForm
                     ->options([
                         'normal' => 'Normal',
                         'stunting' => 'Stunting',
-                        'severely_stunting' => 'Severely stunting',
+                        'severely_stunting' => 'Sangat stunting',
                         'overweight' => 'Overweight',
                         'obesitas' => 'Obesitas',
                     ])

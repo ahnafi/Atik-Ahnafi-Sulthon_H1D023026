@@ -44,9 +44,25 @@ class CheckupsTable
                     ->numeric()
                     ->label("Nilai Perhitungan"),
 
-                TextColumn::make("nutritional_status")
+                TextColumn::make("nutrition")
                     ->label("Status Nutrisi")
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'normal' => 'Normal',
+                        'stunting' => 'Stunting',
+                        'severely_stunting' => 'Severely Stunting',
+                        'overweight' => 'Kegemukan',
+                        'obesitas' => 'Obesitas',
+                        default => $state,
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'normal' => 'success',
+                        'stunting' => 'warning',
+                        'severely_stunting' => 'danger',
+                        'overweight' => 'info',
+                        'obesitas' => 'danger',
+                        default => 'gray',
+                    })
 
             ])
             ->filters([

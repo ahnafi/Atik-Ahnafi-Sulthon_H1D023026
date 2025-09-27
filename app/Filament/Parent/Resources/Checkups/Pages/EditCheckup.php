@@ -26,9 +26,17 @@ class EditCheckup extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $data = App(CheckupService::class)->checkup($data);
+        
+        // Round age to integer for storage
+        $data['age_in_months'] = floor($data['age_in_months']);
 
         Log::info('checkup = '.json_encode($data));
 
         return $data;
+}
+
+    protected function getRedirectUrl(): ?string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
-
 class FuzzyTsukamotoService
 {
     private array $rules = [];
@@ -11,26 +9,23 @@ class FuzzyTsukamotoService
     public function __construct()
     {
         $this->rules = [
-            // 🔴 Severe Malnutrition
+        
             ['waz' => 'severely_underweight', 'haz' => 'severely_stunted', 'output' => 'severely_stunting'],
             ['waz' => 'severely_underweight', 'haz' => 'stunted', 'output' => 'severely_stunting'],
             ['waz' => 'severely_underweight', 'haz' => 'normal', 'output' => 'stunting'],
             ['waz' => 'severely_underweight', 'haz' => 'tall', 'output' => 'stunting'],
 
-            // 🟠 Underweight
             ['waz' => 'underweight', 'haz' => 'severely_stunted', 'output' => 'severely_stunting'],
             ['waz' => 'underweight', 'haz' => 'stunted', 'output' => 'stunting'],
             ['waz' => 'underweight', 'haz' => 'normal', 'output' => 'stunting'],
             ['waz' => 'underweight', 'haz' => 'tall', 'output' => 'normal'],
 
-            // 🟢 Normal weight
             ['waz' => 'normal', 'haz' => 'severely_stunted', 'output' => 'stunting'],
             ['waz' => 'normal', 'haz' => 'stunted', 'output' => 'stunting'],
             ['waz' => 'normal', 'haz' => 'normal', 'output' => 'normal'],
             ['waz' => 'normal', 'haz' => 'tall', 'output' => 'normal'],
 
-            // 🔵 Overweight
-            ['waz' => 'overweight', 'haz' => 'severely_stunted', 'output' => 'overweight'], // short obese risk
+            ['waz' => 'overweight', 'haz' => 'severely_stunted', 'output' => 'overweight'], 
             ['waz' => 'overweight', 'haz' => 'stunted', 'output' => 'overweight'],
             ['waz' => 'overweight', 'haz' => 'normal', 'output' => 'overweight'],
             ['waz' => 'overweight', 'haz' => 'tall', 'output' => 'obesitas'],
@@ -40,21 +35,30 @@ class FuzzyTsukamotoService
     // Triangular fuzzy membership
     private function triangle($x, $a, $b, $c): float|int
     {
-        if ($x <= $a || $x >= $c) return 0;
-        elseif ($x == $b) return 1;
-        elseif ($x > $a && $x < $b) return ($x - $a) / ($b - $a);
-        else return ($c - $x) / ($c - $b);
+        if ($x <= $a || $x >= $c) {
+            return 0;
+        } elseif ($x == $b) {
+            return 1;
+        } elseif ($x > $a && $x < $b) {
+            return ($x - $a) / ($b - $a);
+        } else {
+            return ($c - $x) / ($c - $b);
+        }
     }
 
     // Trapezoidal fuzzy membership
     private function trapezoid($x, $a, $b, $c, $d): float|int
     {
-        if ($x <= $a || $x >= $d) return 0;
-        elseif ($x >= $b && $x <= $c) return 1;
-        elseif ($x > $a && $x < $b) return ($x - $a) / ($b - $a);
-        else return ($d - $x) / ($d - $c);
+        if ($x <= $a || $x >= $d) {
+            return 0;
+        } elseif ($x >= $b && $x <= $c) {
+            return 1;
+        } elseif ($x > $a && $x < $b) {
+            return ($x - $a) / ($b - $a);
+        } else {
+            return ($d - $x) / ($d - $c);
+        }
     }
-
 
     /*
      * Membership function WAZ (Weight-for-Age Z-score)
@@ -83,7 +87,7 @@ class FuzzyTsukamotoService
     }
 
     // Inference process
-    public function inference($waz, $haz): array
+    public function inference($waz, $haz): int|float
     {
         $uWAZ = $this->membershipWAZ($waz);
         $uHAZ = $this->membershipHAZ($haz);
@@ -94,17 +98,12 @@ class FuzzyTsukamotoService
             if ($alpha > 0) {
                 $results[] = [
                     'alpha' => $alpha,
-                    'z' => $this->consequent($rule['output'], $alpha)
+                    'z' => $this->consequent($rule['output'], $alpha),
                 ];
             }
         }
 
-        $crisp = $this->defuzzification($results);
-        $label = $this->translateResult($crisp);
-
-        Log::info('fuzzy results = '.json_encode($results));
-
-        return ['value' => $crisp, 'label' => $label];
+        return $this->defuzzification($results);
     }
 
     // Consequent values (selaras dengan translateResult)
@@ -117,6 +116,7 @@ class FuzzyTsukamotoService
             'overweight' => 80,
             'obesitas' => 100,
         ];
+
         return $zValues[$output] * $alpha;
     }
 
@@ -129,12 +129,13 @@ class FuzzyTsukamotoService
             $num += $res['alpha'] * $res['z'];
             $den += $res['alpha'];
         }
+
         return $den == 0 ? 0 : $num / $den;
     }
 
-    private function translateResult($value): string
+    public function translateResult($value): string
     {
-        //"normal", "stunting", "severely_stunting", "overweight", "obesitas"
+        // "normal", "stunting", "severely_stunting", "overweight", "obesitas"
         if ($value < 30) {
             return 'severely_stunting';
         } elseif ($value > 30 && $value <= 45) {

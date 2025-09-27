@@ -16,12 +16,18 @@ class CreateCheckup extends CreateRecord
      */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-
-        $service = App(CheckupService::class);
-        $data = $service->checkup($data);
+        $data = App(CheckupService::class)->checkup($data);
+        
+        // Round age to integer for storage
+        $data['age_in_months'] = floor($data['age_in_months']);
 
         Log::info('checkup = '.json_encode($data));
 
         return $data;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }
