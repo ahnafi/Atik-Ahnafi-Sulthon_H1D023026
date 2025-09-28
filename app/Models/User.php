@@ -57,7 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         return match (true) {
             $this->hasRole('admin') && $panelId === 'admin' => true,
             $this->hasRole('parent') && $panelId === 'parent' => true,
-            $this->hasRole('medic') && $panelId === 'medic' => true,
+            // $this->hasRole('medic') && $panelId === 'medic' => true,
             default => false,
         };
 

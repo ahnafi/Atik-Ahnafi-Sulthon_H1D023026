@@ -102,7 +102,7 @@ class ChildrenOverviewWidget extends BaseWidget
                             return 'Belum pernah';
                         }
                         
-                        $daysSince = Carbon::parse($lastCheckup->checkup_date)->diffInDays(Carbon::now());
+                        $daysSince = floor(abs(Carbon::parse($lastCheckup->checkup_date)->diffInDays(Carbon::now())));
                         
                         if ($daysSince == 0) {
                             return 'Hari ini';
@@ -118,7 +118,7 @@ class ChildrenOverviewWidget extends BaseWidget
                             return 'danger';
                         }
                         
-                        $daysSince = Carbon::parse($lastCheckup->checkup_date)->diffInDays(Carbon::now());
+                        $daysSince = floor(abs(Carbon::parse($lastCheckup->checkup_date)->diffInDays(Carbon::now())));
                         
                         if ($daysSince <= 30) {
                             return 'success';

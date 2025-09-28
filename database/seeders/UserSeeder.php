@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $admin = Role::create(['name' => 'admin']);
-        $medic = Role::create(['name' => 'medic']);
+        // $medic = Role::create(['name' => 'medic']);
         $parent = Role::create(['name' => 'parent']);
 
         $userAdmin = User::create([
@@ -29,14 +29,14 @@ class UserSeeder extends Seeder
 
         $userAdmin->assignRole($admin);
 
-        $userMedic = User::create([
-            'name' => 'Medic',
-            'email' => 'medic@example.com',
-            'password' => Hash::make('password'),
-            'email_verified_at' => Carbon::now(),
-        ]);
+        // $userMedic = User::create([
+        //     'name' => 'Medic',
+        //     'email' => 'medic@example.com',
+        //     'password' => Hash::make('password'),
+        //     'email_verified_at' => Carbon::now(),
+        // ]);
 
-        $userMedic->assignRole($medic);
+        // $userMedic->assignRole($medic);
 
         $userParent = User::create([
             'name' => 'Budi',
