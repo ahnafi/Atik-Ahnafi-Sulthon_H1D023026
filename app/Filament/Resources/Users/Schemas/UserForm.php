@@ -23,9 +23,15 @@ class UserForm
                 TextInput::make('password')
                     ->revealable()
                     ->minLength(8)
-                    ->dehydrated(fn($state) => filled($state))
-                    ->required(fn($record) => is_null($record))
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn ($record) => is_null($record))
                     ->password(),
+
+                Select::make('roles')
+                    ->multiple()
+                    ->relationship('roles', 'name')
+                    ->preload()
+                    ->required(),
             ]);
     }
 }

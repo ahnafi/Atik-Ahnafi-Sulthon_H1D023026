@@ -3,21 +3,31 @@
 namespace App\Filament\Resources\Checkups\Pages;
 
 use App\Filament\Resources\Checkups\CheckupResource;
-use App\Models\Children;
 use App\Services\CheckupService;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CreateCheckup extends CreateRecord
 {
     protected static string $resource = CheckupResource::class;
 
+    /**
+     * @throws \Exception
+     */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        $data = App(CheckupService::class)->checkup($data);
 
-        $service = App(CheckupService::class);
-        $data = $service->checkup($data);
+        // Round age to integer for storage
+        $data['age_in_months'] = floor($data['age_in_months']);
 
-        return parent::mutateFormDataBeforeCreate($data);
+        Log::info('checkup = '.json_encode($data));
+
+        return $data;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

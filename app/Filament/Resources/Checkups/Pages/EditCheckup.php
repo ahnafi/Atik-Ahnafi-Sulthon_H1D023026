@@ -3,10 +3,9 @@
 namespace App\Filament\Resources\Checkups\Pages;
 
 use App\Filament\Resources\Checkups\CheckupResource;
-use App\Models\Children;
-use Filament\Actions\DeleteAction;
+use App\Services\CheckupService;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class EditCheckup extends EditRecord
 {
@@ -14,19 +13,18 @@ class EditCheckup extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        $data = App(CheckupService::class)->checkup($data);
 
-        $children = Children::findOrFail($data['children_id']);
+        // Round age to integer for storage
+        $data['age_in_months'] = floor($data['age_in_months']);
 
-        // Hitung umur dalam bulan
-        $data["age_in_months"] = Carbon::parse($children->date_of_birth)->diffInMonths(Carbon::parse($data["checkup_date"]));
+        Log::info('checkup = '.json_encode($data));
 
-        return parent::mutateFormDataBeforeSave($data);
+        return $data;
     }
 
-    protected function getHeaderActions(): array
+    protected function getRedirectUrl(): ?string
     {
-        return [
-            DeleteAction::make(),
-        ];
+        return $this->getResource()::getUrl('index');
     }
 }

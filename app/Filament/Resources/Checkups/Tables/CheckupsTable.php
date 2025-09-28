@@ -6,7 +6,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
@@ -20,37 +19,39 @@ class CheckupsTable
     {
         return $table
             ->columns([
-                TextColumn::make("children.name")
-                    ->label("Nama Anak")
+                TextColumn::make('children.name')
+                    ->label('Nama Anak')
                     ->searchable(),
-
-                TextColumn::make("children.user.name")
-                    ->searchable()
-                    ->label("Nama Orang Tua/Wali"),
-
-                TextColumn::make("age_in_months")
+                TextColumn::make('checkup_date')
+                    ->label('Tanggal Pengecekan')
+                    ->date()
+                    ->sortable(),
+                TextColumn::make('children.gender')
+                    ->badge()
+                    ->label('Jenis Kelamin'),
+                TextColumn::make('age_in_months')
+                    ->label('Umur (Bulan)')
                     ->numeric()
-                    ->label("Umur Anak (bulan)"),
-
-                TextColumn::make("height")
+                    ->sortable(),
+                TextColumn::make('height')
+                    ->label('Tinggi (cm)')
                     ->numeric()
-                    ->label("tinggi (cm)"),
-
-                TextColumn::make("weight")
+                    ->sortable(),
+                TextColumn::make('weight')
+                    ->label('Berat (kg)')
                     ->numeric()
-                    ->label("berat (kg)"),
-
-                TextColumn::make("fuzzy_score")
+                    ->sortable(),
+                TextColumn::make('fuzzy_score')
+                    ->label('Nilai Pengecekan')
                     ->numeric()
-                    ->label("Nilai Perhitungan"),
-
-                TextColumn::make("nutrition")
-                    ->label("Status Nutrisi")
+                    ->sortable(),
+                TextColumn::make('nutrition')
+                    ->label('Status Anak')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'normal' => 'Normal',
                         'stunting' => 'Stunting',
-                        'severely_stunting' => 'Severely Stunting',
+                        'severely_stunting' => 'Sangat Stunting',
                         'overweight' => 'Kegemukan',
                         'obesitas' => 'Obesitas',
                         default => $state,
@@ -62,7 +63,19 @@ class CheckupsTable
                         'overweight' => 'info',
                         'obesitas' => 'danger',
                         default => 'gray',
-                    })
+                    }),
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
             ])
             ->filters([
@@ -75,9 +88,9 @@ class CheckupsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make("delete"),
-                    RestoreBulkAction::make("restore"),
-                    ForceDeleteBulkAction::make()
+                    DeleteBulkAction::make('delete'),
+                    RestoreBulkAction::make('restore'),
+                    ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }
