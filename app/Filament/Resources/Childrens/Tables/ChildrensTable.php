@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\Childrens\Tables;
 
+use App\Filament\Exports\ChildrenExporter;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
@@ -69,10 +72,16 @@ class ChildrensTable
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->toolbarActions([
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(ChildrenExporter::class),
+            ])
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make("delete"),
                     RestoreBulkAction::make("restore"),
+                    ExportBulkAction::make()
+                        ->exporter(ChildrenExporter::class),
                 ]),
             ]);
     }

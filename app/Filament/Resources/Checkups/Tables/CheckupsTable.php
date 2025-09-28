@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources\Checkups\Tables;
 
+use App\Filament\Exports\CheckupExporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
@@ -86,11 +89,17 @@ class CheckupsTable
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->toolbarActions([
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(CheckupExporter::class),
+            ])
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make('delete'),
                     RestoreBulkAction::make('restore'),
                     ForceDeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->exporter(CheckupExporter::class),
                 ]),
             ]);
     }
