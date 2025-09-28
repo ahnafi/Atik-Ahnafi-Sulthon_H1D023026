@@ -3,5 +3,5 @@
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('queue:work --stop-when-empty')
-    ->everyTenMinutes()
+    ->everyMinute()
     ->withoutOverlapping();
